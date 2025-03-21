@@ -5,5 +5,21 @@ services:
   # This service will extend code from dcape
   app:
     environment:
-      # Some var to keep YML struct
-      - DEBUG=yes
+      - CMD_DB_URL=postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=disable
+      - CMD_DOMAIN=${APP_SITE}
+      - CMD_PROTOCOL_USESSL=true
+      - CMD_PORT=3000
+      - CMD_URL_ADDPORT=false
+      - NODE_ENV=production
+      - CMD_ALLOW_ANONYMOUS=false
+      - CMD_ALLOW_ANONYMOUS_EDITS=true
+      - CMD_DEFAULT_PERMISSION=private
+      - CMD_ALLOW_EMAIL_REGISTER=false
+      - CMD_ALLOW_GRAVATAR=false
+    volumes:
+      - ${APP_ROOT}/data:/hedgedoc/public/uploads
+#    ports:
+#      - 3000:3000
+#    restart: unless-stopped
+#    depends_on:
+#      - database

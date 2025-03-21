@@ -7,19 +7,19 @@ CFG                ?= .env
 CFG_BAK            ?= $(CFG).bak
 
 #- App name
-APP_NAME           ?= service-template
+APP_NAME           ?= hedgedoc
 
 #- Docker image name
-IMAGE              ?= ghcr.io/lekovr/service-template
+IMAGE              ?= quay.io/hedgedoc/hedgedoc
 
 #- Docker image tag
-IMAGE_VER          ?= 0.1.0
+IMAGE_VER          ?= latest
+
+#- app root
+APP_ROOT           ?= $(PWD)
 
 # If you need database, uncomment this var
-#USE_DB              = yes
-
-# If you need user name and password, uncomment this var
-#ADD_USER            = yes
+USE_DB              = yes
 
 # ------------------------------------------------------------------------------
 
@@ -51,10 +51,14 @@ endif
 
 # ------------------------------------------------------------------------------
 
-## Template support code, used once
-use-template:
+## create user with EMAIL
+user-add:
+	docker exec -it $(APP_TAG)-app-1 /hedgedoc/bin/manage_users --add $$EMAIL
 
-.default-deploy: prep
+## delete user with EMAIL
+user-del:
+	docker exec -it $(APP_TAG)-app-1 /hedgedoc/bin/manage_users --del $$EMAIL
 
-prep:
-	@echo "Just to show we able to attach"
+## change password for user with EMAIL
+user-psw:
+	docker exec -it $(APP_TAG)-app-1 /hedgedoc/bin/manage_users --reset $$EMAIL
